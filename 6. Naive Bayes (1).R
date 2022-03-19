@@ -9,7 +9,7 @@ train<-datos[corte,]
 test<-datos[-corte,]
 
 modelo<-naiveBayes(train$Species~., data=train)
-
+str(test$Petal.Length)
 predBayes<-predict(modelo, newdata = test[,1:4])
 cm<-caret::confusionMatrix(predBayes,test$Species)
 
