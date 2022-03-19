@@ -1,0 +1,106 @@
+---
+title: "Informe HDT5"
+author: "Marco Ramirez, Alfredo Quezada, Estuardo Hernandez"
+date: "19/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Hoja de Trabajo 5: Naive Bayes
+
+### 1. Use los mismos conjuntos de entrenamiento y prueba que utilizó en las dos hojas anteriores. 
+
+```{r warning=FALSE, unload=TRUE}
+
+#Librerias a utilizar
+library(e1071)
+library(caret)
+
+#base de datos a utilzar
+db<-read.csv('train.csv')
+
+```
+
+
+###  2. Elabore un modelo de bayes ingenuo (naive bayes) utilizando el conjunto de entrenamiento y explique los resultados a los que llega. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código. 
+
+```{r }
+#Encontramos los percentiles
+percentil <- quantile(db$SalePrice)
+#Percentiles
+estado<-c('Estado')
+db$Estado<-estado
+db <- within(db, Estado[SalePrice<=129975] <- 'Economica')
+
+db$Estado[(db$SalePrice>129975 & db$SalePrice<=163000)] <- 'Intermedia'
+db$Estado[db$SalePrice>163000] <- 'Cara'
+
+#Bayes 
+#Usamos el 70% de datos
+porcentaje<-0.7
+#El experimento debe ser repetible
+set.seed(1234)
+
+corte <- sample(nrow(db),nrow(db)*porcentaje)
+#Entrenamiento
+train<-db[corte,]
+#Prueba
+test<-db[-corte,]
+
+```
+
+### 3. El modelo debe ser de clasificación, use la variable categórica que hizo con el precio de las casas (barata, media y cara) como variable respuesta. 
+
+
+```{r warning=FALSE}
+#Entrenar el modelo
+modelo<-naiveBayes(train$Estado~., data=train)
+#Casting de las variables, ya que el modelo pide datos numericos
+test$GrLivArea<-as.numeric(test$GrLivArea)
+test$YearBuilt<-as.numeric(test$YearBuilt)
+test$BsmtUnfSF<-as.numeric(test$BsmtUnfSF)
+test$TotalBsmtSF<-as.numeric(test$TotalBsmtSF)
+test$GarageArea<-as.numeric(test$GarageArea)
+test$YearRemodAdd<-as.numeric(test$YearRemodAdd)
+test$SalePrice<-as.numeric(test$SalePrice)
+test$LotArea<-as.numeric(test$LotArea)
+#Realizamos la prediccion
+predBayes<-predict(modelo, newdata = test[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
+#Convertimos la prediccion a factor
+predBayes<-as.factor(predBayes)
+#Creamos la matriz de confusion
+cm<-caret::confusionMatrix(as.factor(predBayes),as.factor(test$Estado))
+
+```
+## 4. Utilice  el  modelo  con  el  conjunto  de  prueba  y  determine  la  eficiencia  del  algoritmo  para clasificar. 
+
+
+```{r}
+table(predBayes)
+table(test$Estado)
+
+```
+
+Tal como se observa en la prediccion obtuvimos **209** casas caras, **113** casas economica y **117** Intermedias.
+Mientras que el valor del test es **222** casas caras, **106** casas economica y **111** Intermedias.
+Demostrando que tuvimos una buena prediccion.
+
+## 5 y 6. Haga un análisis de la eficiencia del  algoritmo usando una matriz de confusión. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores. Analice el modelo. Explique si hay sobreajuste (overfitting) o no. 
+
+```{r}
+cm
+
+```
+
+Por otro lado la matriz de confusion demuestra que en la variable Cara clasifico 204 casas caras, 1 economica y 4 intermedia.
+La variable economica clasifico 2 casas caras, 100 economicas y 11 intermedias.
+La variable intermedia clasifico 16 casas caras, 5 economicas y 96 intermedias.
+Ademas se evidencia que nuestro modelo tuvo una precision de **91%** demostrando que fue una muy buena prediccion, ya que no existe overfitting, 
+
+
+
+
+
