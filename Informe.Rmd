@@ -101,6 +101,29 @@ La variable intermedia clasifico 16 casas caras, 5 economicas y 96 intermedias.
 Ademas se evidencia que nuestro modelo tuvo una precision de **91%** demostrando que fue una muy buena prediccion, ya que no existe overfitting, 
 
 
+## 7. Haga un modelo usando validación cruzada, compare los resultados de este con los del modelo anterior. ¿Cuál funcionó mejor?
 
+```{r include=FALSE}
+ct<-trainControl(method = "cv",train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")],number=10, verboseIter=T)
+modeloCaret<-train(Estado~ .,data=train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea","Estado")],method="nb",trControl = ct)
 
+prediccionCaret<-predict(modeloCaret,newdata = test[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
 
+cva<-caret::confusionMatrix(prediccionCaret,as.factor(test$Estado))
+```
+
+```{r}
+
+cva
+
+````
+
+Realmente, si comparamos con el modelo "normal", osea el de Bayes, tuvimos una cierta mejora. no una muy amplia pero en terminos generales es una buena mejora, dado que nuestra presicion fue de **93%**, mientras que en Bayes obtuvimos un **91%**, cosa que podemos comprobar si nos vamos a la tabla de clasificaciones creada por el modelo cruzado:
+
+  1. Cara: 214 Cara, 1 Economica y 7 Intermedia.
+  
+  2. Economica: 3 Cara, 100 Economica y 7 Intermedia
+  
+  3. Intermedia: 5 Cara, 5 Economica y 97 Intermedia 
+
+De nuevo, comparado con el metodo de Bayes, tuvimos un aumento en cuanto a casas Caras, Intermedias y Economicas 

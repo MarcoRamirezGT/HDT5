@@ -275,6 +275,47 @@ cm&lt;-caret::confusionMatrix(as.factor(predBayes),as.factor(test$Estado))</code
 ## Balanced Accuracy         0.9479           0.9522            0.9004</code></pre>
 <p>Por otro lado la matriz de confusion demuestra que en la variable Cara clasifico 204 casas caras, 1 economica y 4 intermedia. La variable economica clasifico 2 casas caras, 100 economicas y 11 intermedias. La variable intermedia clasifico 16 casas caras, 5 economicas y 96 intermedias. Ademas se evidencia que nuestro modelo tuvo una precision de <strong>91%</strong> demostrando que fue una muy buena prediccion, ya que no existe overfitting,</p>
 </div>
+<div id="haga-un-modelo-usando-validación-cruzada-compare-los-resultados-de-este-con-los-del-modelo-anterior.-cuál-funcionó-mejor" class="section level2">
+<h2>7. Haga un modelo usando validación cruzada, compare los resultados de este con los del modelo anterior. ¿Cuál funcionó mejor?</h2>
+<pre class="r"><code>cva</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##             Reference
+## Prediction   Cara Economica Intermedia
+##   Cara        214         1          7
+##   Economica     3       100          7
+##   Intermedia    5         5         97
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9362          
+##                  95% CI : (0.9091, 0.9572)
+##     No Information Rate : 0.5057          
+##     P-Value [Acc &gt; NIR] : &lt;2e-16          
+##                                           
+##                   Kappa : 0.8975          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.6444          
+## 
+## Statistics by Class:
+## 
+##                      Class: Cara Class: Economica Class: Intermedia
+## Sensitivity               0.9640           0.9434            0.8739
+## Specificity               0.9631           0.9700            0.9695
+## Pos Pred Value            0.9640           0.9091            0.9065
+## Neg Pred Value            0.9631           0.9818            0.9578
+## Prevalence                0.5057           0.2415            0.2528
+## Detection Rate            0.4875           0.2278            0.2210
+## Detection Prevalence      0.5057           0.2506            0.2437
+## Balanced Accuracy         0.9635           0.9567            0.9217</code></pre>
+<p>Realmente, si comparamos con el modelo “normal”, osea el de Bayes, tuvimos una cierta mejora. no una muy amplia pero en terminos generales es una buena mejora, dado que nuestra presicion fue de <strong>93%</strong>, mientras que en Bayes obtuvimos un <strong>91%</strong>, cosa que podemos comprobar si nos vamos a la tabla de clasificaciones creada por el modelo cruzado:</p>
+<ol style="list-style-type: decimal">
+<li><p>Cara: 214 Cara, 1 Economica y 7 Intermedia.</p></li>
+<li><p>Economica: 3 Cara, 100 Economica y 7 Intermedia</p></li>
+<li><p>Intermedia: 5 Cara, 5 Economica y 97 Intermedia</p></li>
+</ol>
+<p>De nuevo, comparado con el metodo de Bayes, tuvimos un aumento en cuanto a casas Caras, Intermedias y Economicas</p>
+</div>
 
 
 

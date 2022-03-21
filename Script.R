@@ -37,8 +37,6 @@ test$SalePrice<-as.numeric(test$SalePrice)
 test$LotArea<-as.numeric(test$LotArea)
 
 
-
-
 table(predBayes)
 table(test$Estado)
 predBayes<-as.factor(predBayes)
@@ -47,27 +45,35 @@ predBayes<-predict(modelo, newdata = test[,c("GrLivArea","YearBuilt","BsmtUnfSF"
 cm<-caret::confusionMatrix(as.factor(predBayes),as.factor(test$Estado))
 cm
 
+
+
+
+
 #Cross Validation
 #GarageYrBlt  MasVnrArea LotFrontage /PoolQC Fence MiscFeature FireplaceQu Alley
 #Cambiamos los NA
 
+# Procedimiento para evitar errones con los NA's trabajados con Lynette en clase. 
 train[c("GarageYrBlt")][is.na(train[c("GarageYrBlt")])] <- 1979
 train[c("MasVnrArea")][is.na(train[c("MasVnrArea")])] <- 0
 train[c("LotFrontage")][is.na(train[c("LotFrontage")])] <- 68.00
 
 sum(is.na(train$BsmtExposure))
-
 names(which(colSums(is.na(train))>0)) 
-
-
 sum(is.na(train$GrLivArea))
 
 
+# Una vez lista la modificacion, procedemos a selerccionar las variables de interes. 
 ct<-trainControl(method = "cv",train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")],number=10, verboseIter=T)
 modeloCaret<-train(Estado~ .,data=train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea","Estado")],method="nb",trControl = ct)
 
+#Creamos la sentencia para las predecciones
 prediccionCaret<-predict(modeloCaret,newdata = test[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
-caret::confusionMatrix(prediccionCaret,as.factor(test$Estado))
+#Creamos el modelo cruzado en base a las variables anteriormente corregidas
+cva<-caret::confusionMatrix(prediccionCaret,as.factor(test$Estado))
+
+#Mostramos el modelo. 
+cva
 
 
 
