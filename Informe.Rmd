@@ -127,3 +127,7 @@ Realmente, si comparamos con el modelo "normal", osea el de Bayes, tuvimos una c
   3. Intermedia: 5 Cara, 5 Economica y 97 Intermedia 
 
 De nuevo, comparado con el metodo de Bayes, tuvimos un aumento en cuanto a casas Caras, Intermedias y Economicas 
+
+## 8.Compare la eficiencia del algoritmo con el resultado obtenido con el árbol de decisión (el de clasificación). ¿Cuál es mejor para predecir? ¿Cuál se demoró más en procesar? 
+
+Realmente este metodo fue mas rapido y sencillo que el arbol de clasificacion, se obtuvieron resultados similares, sin embargo, este demostro mas confiabilidad, cabe mencionar que lo mas importante de este modelo es que no se obtuvo overfitting ni la primera vez, ni con la validacion cruzada. Ademas, el arbol de regresion se obtuvo resultados mas explicativos, pero mas costoso en terminos de tiempo y eficiencia, por ello, si lo que se desea es mejorar la eficiencia el metodo de naive Bayes es el mejor para ello. 
